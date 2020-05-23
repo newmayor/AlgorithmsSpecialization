@@ -59,9 +59,29 @@ def ks_mult(x,y):
     if x < 10 or y < 10: #this is the base case, when the original numbers cant be divided by 10
         return x*y
     else: #it may not be necessary to split the program into if/else but it helps to develop visual symmetry of the base vs recursive code blocks
+        a = int(x / (10**m))
+        b = int(x % (10**m))
+        c = int(y / (10**m))
+        d = int(y % (10**m))
+
+        print("x: " + str(x) + ", y: " + str(y))
+        print("a: " + str(a) + ", b: " + str(b) + ", c: " + str(c) + ", d: " + str(d))
+
+        ac = ks_mult(a,c)
+        bd = ks_mult(b,d)
+        ad_bc = ks_mult(a+b, c+d) -ac - bd
+
+        print("ac: " + str(ac) + ", bd: " + str(bd) + ", ad_bc: " + str(ad_bc))
         
+        result = (10**(2*m))*ac + (10**m)*(ad_bc) + bd
+        return result
+
 
     
-print(ks_mult(7583, 22903))
+ans = ks_mult(3141592653589793238462643383279502884197169399375105820974944592, 2718281828459045235360287471352662497757247093699959574966967627)
+
+print()
+print("the answer is: " + str(ans))
+print(ans)
 
 
