@@ -16,6 +16,8 @@ filepath = input("Enter path of the file of array to be read: ")
 with open(filepath, "r") as abc:
     data = abc.readlines()
 
+d = [0] * len(data)
+
 print(len(data))
 print(type(data[3]))
 
@@ -25,7 +27,9 @@ def invCount(data_input):
     
     lefthalf = data_input[:m]
     righthalf = data_input[m:]
-    
+    if len(lefthalf) == 1 or len(righthalf) == 1:
+
+
     a = invCount(lefthalf)
     b = invCount(righthalf)
 

@@ -58,3 +58,17 @@ EXAMPLE: For the input array 8 2 4 5 7 1 you would consider the first (8), middl
 
 SUBTLE POINT: A careful analysis would keep track of the comparisons made in identifying the median of the three candidate elements. You should NOT do this. That is, as in the previous two problems, you should simply add m-1m−1 to your running total of comparisons every time you recurse on a subarray with length mm.
 '''
+
+#Case 1
+#First element of the unsorted array is chosen as pivot element for sorting using QuickSort
+
+
+numlist_filename = r"C:\Users\numai\Documents\Learning\AlgorithmsSpecialization\DividAndConquer_StanfordClass\assignments\week3.txt"
+data =[]
+with open(numlist_filename, "r") as f:
+    for i in f:
+        data.append(int(i))
+
+
+
+print(len(data))
