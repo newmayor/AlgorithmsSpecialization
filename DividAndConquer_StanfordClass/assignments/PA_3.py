@@ -57,11 +57,84 @@ th
 EXAMPLE: For the input array 8 2 4 5 7 1 you would consider the first (8), middle (4), and last (1) elements; since 4 is the median of the set {1,4,8}, you would use 4 as your pivot element.
 
 SUBTLE POINT: A careful analysis would keep track of the comparisons made in identifying the median of the three candidate elements. You should NOT do this. That is, as in the previous two problems, you should simply add m-1m−1 to your running total of comparisons every time you recurse on a subarray with length mm.
+
+Solution taken from https://pythonandr.com/2016/07/13/computing-work-done-total-pivot-comparisons-by-quick-sort/
 '''
 
 #Case 1
 #First element of the unsorted array is chosen as pivot element for sorting using QuickSort
 
+def count_pivotFirst(x):
+    '''Counts number of comparisons while using Quick Sort with the first element of the unsorted array as the pivot element.''' 
+    global count_pivot_first
+    if len(x) ==1 or len(x) ==0:
+        return x
+    else:
+        count_pivot_first += len(x) -1
+        i = 0
+        for j in range(len(x) -1):
+            if x[j+1] < x[0]: #compare next element to the pivot x[0]
+                x[j+1], x[i+1] = x[i+1], x[j+1] #swap the two elements if the current jth element is less than the pivot. However, note i is not incremented with every i bc the x[j+1] < x[0] term is not always true.
+                i += 1 #and the i increment just comes here.
+        x[0], x[i] = x[i], x[0] #is this moving the pivot point over to x[i] with every recursive call?
+
+        first_part = count_pivotFirst(x[:i])
+        second_part = count_pivotFirst(x[i+1:])
+        first_part.append(x[i])
+        return first_part + second_part
+
+
+#Case 2
+#Last element of the unsorted array is chosen as pivot element for sorting using QuickSort
+
+def count_pivotLast(x):
+    '''Counts numbers of comparisons while using quicksort with the last element of the array as the pivot'''
+    global count_pivot_last
+    if len(x) ==1 or len(x) ==0:
+        return x
+    else:
+        count_pivot_last += len(x) -1
+        x[0], x[-1] = x[-1], x[0]
+        i = 0
+        for j in range(len(x) -1):
+            if x[j+1] < x[0]: #compare next element to the pivot x[0]
+                x[j+1], x[i+1] = x[i+1], x[j+1] #swap the two elements if the current jth element is less than the pivot. However, note i is not incremented with every i bc the x[j+1] < x[0] term is not always true.
+                i += 1 #and the i increment just comes here.
+        x[0], x[i] = x[i], x[0] #is this moving the pivot point over to x[i] with every recursive call?
+
+        first_part = count_pivotLast(x[:i])
+        second_part = count_pivotLast(x[i+1:])
+        first_part.append(x[i])
+        return first_part + second_part
+
+
+#Case 3
+#Median-of-three method used to choose pivot element
+
+def middle_index(x):
+    '''returns the index of the middle element'''
+    if len(x) %2 ==0:
+        middle_index = len(x)/2 -1
+    else:
+        middle_index = len(x)//2
+    return middle_index
+
+def median_index(x):
+    '''Returns the median index of three when passed an array and indices of any 3 elements of that array'''
+    
+
+
+def count_pivotMid(x):
+    global count_pivot_median
+    if len(x) ==1 or len(x) ==0:
+        return x
+    else:
+        count_pivot_median += len(x) -1
+
+
+
+#initialize the counters
+count_pivot_first = 0; count_pivot_last = 0; count_pivot_median = 0
 
 numlist_filename = r"C:\Users\numai\Documents\Learning\AlgorithmsSpecialization\DividAndConquer_StanfordClass\assignments\week3.txt"
 data =[]
@@ -69,6 +142,12 @@ with open(numlist_filename, "r") as f:
     for i in f:
         data.append(int(i))
 
+count_pivotFirst(data)
+
+count_pivotLast(data)
 
 
 print(len(data))
+
+print(count_pivot_first)
+print(count_pivot_last)
