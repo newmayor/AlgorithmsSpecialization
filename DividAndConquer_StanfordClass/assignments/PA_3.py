@@ -114,14 +114,19 @@ def count_pivotLast(x):
 def middle_index(x):
     '''returns the index of the middle element'''
     if len(x) %2 ==0:
-        middle_index = len(x)/2 -1
+        middle_index = len(x)//2 -1
     else:
         middle_index = len(x)//2
     return middle_index
 
-def median_index(x):
+def median_index(x, i, j, k):
     '''Returns the median index of three when passed an array and indices of any 3 elements of that array'''
-    
+    if (x[i] - x[j])*(x[i] - x[k]) < 0:
+        return i
+    elif (x[j] - x[i])*(x[j] - x[k]) < 0:
+        return j
+    else:
+        return k
 
 
 def count_pivotMid(x):
@@ -130,6 +135,21 @@ def count_pivotMid(x):
         return x
     else:
         count_pivot_median += len(x) -1
+        k = median_index(x, 0, middle_index(x), -1) #x is input array, 0 is starting index, middle_index is middle of array, -1 is the last element of the array
+        if k != 0: x[0], x[k] = x[k], x[0] #if the median index is not 0, move the element found in the median index to the front of the array and use it as the pivot for the rest of the algo.
+        
+        i = 0
+        for j in range(len(x) -1):
+            if x[j+1] < x[0]: #compare next element to the pivot x[0]
+                x[j+1], x[i+1] = x[i+1], x[j+1] #swap the two elements if the current jth element is less than the pivot. However, note i is not incremented with every i bc the x[j+1] < x[0] term is not always true.
+                i += 1 #and the i increment just comes here.
+        x[0], x[i] = x[i], x[0] #is this moving the pivot point over to x[i] with every recursive call?
+
+        first_part = count_pivotMid(x[:i])
+        second_part = count_pivotMid(x[i+1:])
+        first_part.append(x[i])
+        return first_part + second_part
+
 
 
 
@@ -146,8 +166,10 @@ count_pivotFirst(data)
 
 count_pivotLast(data)
 
+count_pivotMid(data)
 
 print(len(data))
 
 print(count_pivot_first)
 print(count_pivot_last)
+print(count_pivot_median)
