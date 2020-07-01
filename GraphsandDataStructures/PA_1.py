@@ -17,3 +17,60 @@ Reverse engineering code from http://proserge.kh.ua/coding/index.php/post/41/Sta
 
 """
 
+import collections #this provides specialized high-performance container datatypes alternative to the standard list, dict, tuple.
+
+
+def return_emptylist():
+    return []
+
+def return_false():
+    return False
+
+def ParseGraph(filename):
+    #filename will be algo4SCC.txt, taken from the coursera website
+    """Parse a graph into a list of edges for programming.
+    Arguments taken: 
+    - filename: the original graph given in the .txt file 
+    Returns:
+    - edges = [(vertex1, vertex2), (vertex2, vertext3), ....] represented as tuples.
+    """
+
+    edges = [] #instantiate an empty edges array
+    for l in open(filename):
+        fields = [int(f) for f in l.split()] #split each line of the file read and convert to int
+        edges.append(tuple(fields)) #build a list of tuples consisting of the entries in the original graph
+
+    #defaultdict is interesting bc you can initialize the dict with a list of tuples as the default_factory attribute. But im not sure how this is advantageous
+    adjacency = collections.defaultdict(return_emptylist)
+    reverse_adjacency = collections.defaultdict(return_emptylist)
+
+    for e in edges:
+        adjacency[e[0]] = adjacency[e[0]] + [e]
+        reverse_adjacency[e[1]] = reverse_adjacency[e[1]] + [e[1], e[0]]
+
+    return adjacency, reverse_adjacency, edges
+
+t = 0 #is this the sink node?
+s = 0 #is this the source node?
+finishing = {} #created as a set but im not sure why set was chosen as the data structure of choice.
+leader = {} #created as a set
+explored = collections.defaultdict(return_false)
+
+def ResetState():
+    global t,s,finishing, leader, explored
+    t = 0
+    s = 0
+    finishing = {}
+    leader = {}
+    explored = collections.defaultdict(return_false)
+
+def DFSLoop(edges, labeling, reversed = False):
+    global s 
+    for i in labeling: #what is labeling?
+        if not explored[i]: #if there is such an element i from 'labeling' that is not present in the already explored list of nodes, then store that in s.
+            s = i
+            DFS(edges, i, reversed)
+
+
+
+
