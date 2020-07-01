@@ -44,6 +44,7 @@ def ParseGraph(filename):
     adjacency = collections.defaultdict(return_emptylist)
     reverse_adjacency = collections.defaultdict(return_emptylist)
 
+    #im not quite sure what is happening here. i know it should be extracting edges in some way but this looks confusing.
     for e in edges:
         adjacency[e[0]] = adjacency[e[0]] + [e]
         reverse_adjacency[e[1]] = reverse_adjacency[e[1]] + [e[1], e[0]]
@@ -71,6 +72,50 @@ def DFSLoop(edges, labeling, reversed = False):
             s = i
             DFS(edges, i, reversed)
 
+forward_adjacency = {}
+reverse_adjacency = {}
 
+def DFS(edges, start, reversed = False): #False is the default condition for Arg reversed. Start is the starting node. But how to determine that?
+    global t
+    if reversed:
+        adjacency = reverse_adjacency
+    else:
+        adjacency = forward_adjacency
+    
+    #iterative (i.e. manually managing a stack) solution
+    stack = []
+    stack.append((start, 1)) 
+
+    while len(stack) > 0:
+        current, phase = stack.pop() #what the heck is phase and current?
+        if phase == 1: #what does phase being 1 signify?
+            explored[current] = True 
+            leader[current] = s
+            edge_found = False #this is the default assumption to accomodate for solo nodes or ones that are connected to already visited nodes
+            for edge in adjacency[current]: #for every edge in the adjacency list corresponding to this current node
+                if not explored[edge[1]]: #if its connected node doesn't exist in explored, then...
+                    stack.append((current, 1)) #append this starting node to the stack
+                    stack.append((edge[1], 1)) #then append this newly discovered node to the stack
+                    edge_found = True #given we're at the current node, we have found a new node, therefore an edge is found. 
+                    break 
+            if not edge_found: #if no new node is found, therefore no new edge is traversed
+                stack.append((current, 2)) #change phase state to 2 which indicates all of the new nodes connected to node current have been found
+        if phase == 2:
+            t += 1
+            finishing[current] = t
+            sys.stderr.write('Finished %s\n' % current)
+
+forward_adjacency, reverse_adjacency, edges = ParseGraph("week1.txt")
+
+sys.stderr.write('Graph parsed.\n')
+
+num_nodes = max([e[0] for e in edges] + [e[1] for e in edges])
+labeling = xrange(num_nodes, 0, -1)
+DFSLoop(edges, labeling, True)
+
+
+
+
+            
 
 
