@@ -18,7 +18,8 @@ Reverse engineering code from http://proserge.kh.ua/coding/index.php/post/41/Sta
 """
 
 import collections #this provides specialized high-performance container datatypes alternative to the standard list, dict, tuple.
-
+import sys
+import random
 
 def return_emptylist():
     return []
@@ -68,6 +69,7 @@ def ResetState():
 def DFSLoop(edges, labeling, reversed = False):
     global s 
     for i in labeling: #what is labeling?
+        #print("i in labeling is: " + str(i))
         if not explored[i]: #if there is such an element i from 'labeling' that is not present in the already explored list of nodes, then store that in s.
             s = i
             DFS(edges, i, reversed)
@@ -110,12 +112,26 @@ forward_adjacency, reverse_adjacency, edges = ParseGraph("week1.txt")
 sys.stderr.write('Graph parsed.\n')
 
 num_nodes = max([e[0] for e in edges] + [e[1] for e in edges])
-labeling = xrange(num_nodes, 0, -1)
-DFSLoop(edges, labeling, True)
+labeling = range(num_nodes, 0, -1)
+DFSLoop(edges, labeling, True) #note reversed argument is True in this case
 
+sys.stderr.write('Reverse DFSLoop done\n')
 
+inverse_finishing = dict((v,k) for k,v in finishing.iteritems())
+finish_labeling = [inverse_finishing[i] for i in range(num_nodes, 0, -1)]
 
+ResetState()
+DFSLoop(edges, finish_labeling) #note reversed argument is not input here, therefore it is False by default
 
-            
+sys.stderr.write('Forward DFSLoop also done.\n')
 
+sccs = {}
+for i in leader:
+    if leader[i] not in sccs:
+        sccs[leader[i]] = [i]
+    else:
+        sccs[leader[i]].append(i)
+
+for i in sccs:
+    print('%s\t%s' % (i, len(sccs[i])))
 
