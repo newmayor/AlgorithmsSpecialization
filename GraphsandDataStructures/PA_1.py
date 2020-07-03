@@ -69,7 +69,7 @@ def ResetState():
 def DFSLoop(edges, labeling, reversed = False):
     global s 
     for i in labeling: #what is labeling?
-        print("i in labeling is: " + str(i) + " labeling is: " + str(type(labeling)))
+        print("Looking at node: " + str(i) + "\n") #+ " labeling is: " + str(type(labeling))
         if not explored[i]: #if there is such an element i from 'labeling' that is not present in the already explored list of nodes, then store that in s.
             s = i
             DFS(edges, i, reversed)
@@ -83,44 +83,48 @@ def DFS(edges, start, reversed = False): #False is the default condition for Arg
         adjacency = reverse_adjacency
     else:
         adjacency = forward_adjacency
-    print("the adjacency list: " + str(type(adjacency)) + " len: " + str(len(adjacency)) + "\n")
-    print(adjacency)
+    #print("the adjacency list: " + str(type(adjacency)) + " len: " + str(len(adjacency)) + "\n")
+    #print(adjacency)
+    
     #iterative (i.e. manually managing a stack) solution
     stack = []
     stack.append((start, 1)) 
-    print("length of stack: " + str(len(stack)))
+    #print("length of stack: " + str(len(stack)))
+    #edge_counter = 0
 
     while len(stack) > 0:
         current, phase = stack.pop() #what the heck is phase and current?
-        print("entered while loop on len of stack>0 : \n")
-        print("current: " + str(current) + " phase: " +str(phase) + "\n")
+        #print("entered while loop on len of stack>0 : \n")
+        #print("current: " + str(current) + " phase: " +str(phase) + "\n")
+        #print(edge_counter)
         if phase == 1: #what does phase being 1 signify?
             explored[current] = True 
             leader[current] = s
-            print("explored[current] " + str(explored[current]) + " leader[current] " + str(leader[current]) + "\n")
+            #print("explored[current] " + str(explored[current]) + " leader[current] " + str(leader[current]) + "\n")
             edge_found = False #this is the default assumption to accomodate for solo nodes or ones that are connected to already visited nodes
-            print("entered if phase == 1 condition statement: \n")
-            print("adjacency[current]: ")
-            print(adjacency[current])
-            print("\nthe explored list of nodes so far: \n")
-            print(explored)
+            #print("entered if phase == 1 condition statement: \n")
+            #print("adjacency[current]: ")
+            #print(adjacency[current])
+            #print("\nthe explored list of nodes so far: \n")
+            #print(explored)
             for edge in adjacency[current]: #for every edge in the adjacency list corresponding to this current node
-                print("\nthe current edge: \n")
-                print(edge)
-                print("\nthe type of this edge: " + str(type(edge)))
-                if not explored[edge[1]]: #if its connected node doesn't exist in explored, then...
+                #print("\nthe current edge: \n")
+                #print(edge)
+                #print("\nthe type of this edge: " + str(type(edge)))
+                if not explored[edge]: #if its connected node doesn't exist in explored, then...
                     stack.append((current, 1)) #append this starting node to the stack
-                    stack.append((edge[1], 1)) #then append this newly discovered node to the stack
+                    stack.append((edge, 1)) #then append this newly discovered node to the stack
                     edge_found = True #given we're at the current node, we have found a new node, therefore an edge is found. 
+                    #edge_counter += 1
                     break 
             if not edge_found: #if no new node is found, therefore no new edge is traversed
                 stack.append((current, 2)) #change phase state to 2 which indicates all of the new nodes connected to node current have been found
-        print("the associated stack: \n")
-        print(stack)
+        #print("the associated stack: \n")
+        #print(stack)
         if phase == 2:
             t += 1
             finishing[current] = t
-            sys.stderr.write('Finished %s\n' % current)
+            print('Finished ' + str(current) + "\n")
 
 forward_adjacency, reverse_adjacency, edges = ParseGraph("week1.txt")
 
@@ -132,7 +136,7 @@ DFSLoop(edges, labeling, True) #note reversed argument is True in this case
 
 sys.stderr.write('Reverse DFSLoop done\n')
 
-inverse_finishing = dict((v,k) for k,v in finishing.iteritems())
+inverse_finishing = dict((v,k) for k,v in finishing.items())
 finish_labeling = [inverse_finishing[i] for i in range(num_nodes, 0, -1)]
 
 ResetState()
