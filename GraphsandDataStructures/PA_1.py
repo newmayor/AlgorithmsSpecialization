@@ -126,7 +126,7 @@ def DFS(edges, start, reversed = False): #False is the default condition for Arg
             finishing[current] = t
             print('Finished ' + str(current) + "\n")
 
-forward_adjacency, reverse_adjacency, edges = ParseGraph("week1.txt")
+forward_adjacency, reverse_adjacency, edges = ParseGraph("week1_testcase.txt")
 
 sys.stderr.write('Graph parsed.\n')
 
